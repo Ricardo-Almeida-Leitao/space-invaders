@@ -8,7 +8,7 @@ int main() {
     sf::RectangleShape player(sf::Vector2f(10, 10));   
     player.setFillColor(sf::Color::Red);
     
-    sf::Vector2f dir(1.0f,0.0f);
+    sf::Vector2f dir(1,0);
 
 
     while (window.isOpen()) {
@@ -18,19 +18,19 @@ int main() {
             if (event.type == sf::Event::KeyPressed) {
                 switch (event.key.code) {
                     case sf::Keyboard::Up:
-                        dir = sf::Vector2f(0.0f, 1.0f);
+                        dir = sf::Vector2f(0, 1);
                         break;
 
                     case sf::Keyboard::Down:
-                        dir = sf::Vector2f(0.0f, -1.0f);
+                        dir = sf::Vector2f(0, -1);
                         break;
 
                     case sf::Keyboard::Left:
-                        dir = sf::Vector2f(-1.0f, 0.0f);
+                        dir = sf::Vector2f(-1 ,0);
                         break;
 
                     case sf::Keyboard::Right:
-                        dir = sf::Vector2f(1.0f, 0.0f);
+                        dir = sf::Vector2f(1, 0);
                         break;
 
                     default:
@@ -43,12 +43,23 @@ int main() {
             
         }
 
-        sf::Time elapsed = clock.getElapsedTime(); 
-        std::cout << "Time passed: " << elapsed.asSeconds() << " seconds\n";
+        if(player.getPosition().x > window.getSize().x - player.getSize().x)
+            dir.x = -dir.x;
+        if(player.getPosition().x < 0)
+            dir.x = -dir.x;
+        if(player.getPosition().y > window.getSize().y - player.getSize().y)
+            dir.y = -dir.y;
+        if(player.getPosition().y < 0)
+            dir.y = -dir.y;
+
+
+        sf::Time delta = clock.restart();
+        float dt = delta.asSeconds();
+
+        player.move(dir * dt);
 
         window.clear(sf::Color::Green);
         window.draw(player);
-        player.setPosition(player.getPosition() + (dir * 10.f));
         window.display();
     }
 
